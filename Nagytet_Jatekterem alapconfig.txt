@@ -1,0 +1,357 @@
+
+Jatekterem
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Jatekterem
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+GAME_Belepo
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname GAME_Belepo
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+
+GAME_Belepo_SW
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname GAME_Belepo_SW
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+GAME_MLS1
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname GAME_MLS1
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+GAME_MLS2
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname GAME_MLS2
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+GAME_MLS3
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname GAME_MLS3
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+GAME_MLS4
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname GAME_MLS4
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

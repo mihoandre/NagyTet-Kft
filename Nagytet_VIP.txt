@@ -1,0 +1,277 @@
+VIP_Szalon
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname VIP_Szalon
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+VIP_Exclusive
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname VIP_Exclusive
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+VIP_SW1
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname VIP_SW1
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+VIP_SW2
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname VIP_SW2
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+VIP_SW3
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname VIP_SW3
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+VIP_SW4
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname VIP_SW4
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+
+
