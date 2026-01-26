@@ -1,0 +1,689 @@
+ISP
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname ISP
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+Szerver_Center
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Szerver_Center
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+Szerver_Kozpont1
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Szerver_Kozpont1
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+Szerver_Kozpont 2
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Szerver_Kozpont2
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+
+Szerver_Iroda 
+
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Szerver_Iroda
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+int gig0/0
+no sh
+ex
+
+int gig0/0.10
+enc dot 10
+ip add 192.168.21.1 255.255.255.0
+desc Vlan 10 atjaroja
+ip help 192.168.24.10
+ex
+
+int gig0/0.20
+enc dot 20
+ip add 192.168.22.1 255.255.255.0
+desc Vlan 20 atjaroja
+ip help 192.168.24.10
+ex
+
+int gig0/0.30
+enc dot 30
+ip add 192.168.23.1 255.255.255.0
+desc Vlan 30 atjaroja
+ip help 192.168.24.10
+ex
+
+int gig0/0.99
+enc dot 99 Native
+ip add 192.168.24.1 255.255.255.0
+desc Vlan 99 Native atjaroja
+ip help 192.168.24.10
+ex
+
+
+
+
+Iroda_SW1
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Iroda_SW1
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+vlan 10
+name iroda_szerverkozpont
+vlan 20
+name jatekterem
+vlan 30
+name VIP
+vlan 99
+name Native
+vlan 999
+name Unused
+ex
+
+vtp domain NagytetIroda
+vtp mode server
+vtp password cisco123
+vtp version 2
+
+
+
+int r gig0/1,fa0/1-4
+swit mod tru
+swit tru nat vlan 99
+swit tru all vlan 10,20,30,99
+ex
+
+int fa0/5
+swit mod acc
+swit acc vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/6
+swit mod acc
+swit acc vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/7
+swit mod acc
+swit acc vlan 30
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+spanning-tree mode rapid-pvst
+
+int r fa0/1-2
+channel-group 1 mode active
+ex
+
+int r fa0/3-4
+channel-group 4 mode pass
+ex
+
+int r fa0/8-24,gig0/2
+swit mod acc
+swit acc vlan 999
+shutdown
+ex
+
+
+Iroda_SW2
+
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Iroda_SW2
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+vtp domain NagytetIroda
+vtp mode client
+vtp password cisco123
+vtp version 2
+
+
+
+int r fa0/1-4
+swit mod tru
+swit tru nat vlan 99
+swit tru all vlan 10,20,30,99
+ex
+
+int fa0/5
+swit mod acc
+swit acc vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/6
+swit mod acc
+swit acc vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/7
+swit mod acc
+swit acc vlan 30
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/8
+swit mod acc
+swit acc vlan 99
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+spanning-tree mode rapid-pvst
+
+int r fa0/1-2
+channel-group 2 mode active
+ex
+
+int r fa0/3-4
+channel-group 1 mode pass
+ex
+
+int r fa0/9-24,gig0/1-2
+swit mod acc
+swit acc vlan 999
+shutdown
+ex
+
+
+Iroda_SW3
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Iroda_SW3
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+vtp domain NagytetIroda
+vtp mode client
+vtp password cisco123
+vtp version 2
+
+
+
+int r fa0/1-4
+swit mod tru
+swit tru nat vlan 99
+swit tru all vlan 10,20,30,99
+ex
+
+
+int gig0/1
+swit mod acc
+swit acc vlan 99
+spanning-tree portfast
+spanning-tree bpduguard enable 
+ex
+
+spanning-tree mode rapid-pvst
+
+int r fa0/1-2
+channel-group 4 mode active
+ex
+
+int r fa0/3-4
+channel-group 3 mode pass
+ex
+
+int r fa0/5-24,gig0/2
+swit mod acc
+swit acc vlan 999
+shutdown
+ex
+
+
+
+Iroda_SW4
+
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Iroda_SW4
+
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+vtp domain NagytetIroda
+vtp mode client
+vtp password cisco123
+vtp version 2
+
+
+
+int r fa0/1-4
+swit mod tru
+swit tru nat vlan 99
+swit tru all vlan 10,20,30,99
+ex
+
+
+int r fa0/8-9
+swit mod acc
+swit acc vlan 99
+spanning-tree portfast
+spanning-tree bpduguard enable 
+ex
+
+spanning-tree mode rapid-pvst
+
+int r fa0/1-2
+channel-group 3 mode active
+ex
+
+int r fa0/3-4
+channel-group 2 mode pass
+ex
+
+int r fa0/5-7,fa0/10-24,gig0/1-2
+swit mod acc
+swit acc vlan 999
+shutdown
+ex
+
+Szerver_SW
+
+
+
+ena
+clock set 12:00:00 13 Jan 2026
+configure terminal
+
+hostname Szerver_SW
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+Ez a kaszino zart informatikai halozata.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+
+
+
+
+
+
+
+
+
