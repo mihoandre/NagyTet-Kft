@@ -85,6 +85,43 @@ crypto key generate rsa
 
 ip ssh version 2
 
+int se0/0/0
+ip add 10.10.10.2 255.255.255.252
+desc Jatekterem fele
+no sh
+ex
+
+int se0/0/1
+ip add 10.10.10.29 255.255.255.252
+desc VIP_Szalon fele
+no sh
+ex
+
+int se0/1/0
+ip add 10.10.10.10 255.255.255.252
+desc Szerver_Kozpont1 fele
+no sh
+ex
+int se0/1/1
+ip add 10.10.10.25 255.255.255.252
+desc Szerver_Kozpont2 fele
+no sh
+ex
+
+int gig0/0
+ip add 10.10.10.41 255.255.255.252
+desc Firewall fele
+no sh
+ex
+
+router ospf 10
+router-id 2.2.2.2
+network 10.10.10.0 0.0.0.3 area 0
+network 10.10.10.28 0.0.0.3 area 0
+network 10.10.10.8 0.0.0.3 area 0
+network 10.10.10.24 0.0.0.3 area 0
+ex
+
 
 
 Szerver_Kozpont1
@@ -130,6 +167,34 @@ crypto key generate rsa
 
 ip ssh version 2
 
+int se0/0/0
+ip add 10.10.10.9 255.255.255.252
+desc Szerver_Center fele
+no sh
+ex
+								
+int gig0/0
+ip add 192.168.25.2 255.255.255.0
+desc Szerver_SW fele
+standby 1 ip 192.168.25.1
+standby 1 priority 110
+standby 1 preempt
+no sh
+ex
+
+int gig0/1
+ip add 10.10.10.17 255.255.255.252
+desc Szerver_Iroda fele
+no sh
+ex
+
+router ospf 10
+router-id 3.3.3.3
+network 10.10.10.8 0.0.0.3 area 0
+network 10.10.10.16 0.0.0.3 area 0
+network 192.168.25.0 0.0.0.255 area 0
+passive-interface gig0/0
+ex
 
 
 Szerver_Kozpont 2
@@ -176,6 +241,34 @@ crypto key generate rsa
 
 ip ssh version 2
 
+int se0/0/0
+ip add 10.10.10.26 255.255.255.252
+desc Szerver_Center fele
+no sh
+ex
+								
+int gig0/0
+ip add 192.168.25.3 255.255.255.0
+desc Szerver_SW fele
+standby 1 ip 192.168.25.1
+standby 1 priority 100
+standby 1 preempt
+no sh
+ex
+
+int gig0/1
+ip add 10.10.10.22 255.255.255.252
+desc Szerver_Iroda fele
+no sh
+ex
+
+router ospf 10
+router-id 4.4.4.4
+network 10.10.10.20 0.0.0.3 area 0
+network 10.10.10.24 0.0.0.3 area 0
+network 192.168.25.0 0.0.0.255 area 0
+passive-interface gig0/0
+ex
 
 
 
@@ -256,7 +349,28 @@ desc Vlan 99 Native atjaroja
 ip help 192.168.24.10
 ex
 
+int gig0/1
+ip add 10.10.10.18 255.255.255.252
+desc Szerver_Kozpont1 fele
+no sh
+ex
 
+int gig0/2
+ip add 10.10.10.21 255.255.255.252
+desc Szerver_Kozpont2 fele
+no sh
+ex
+
+router ospf 10
+router-id 5.5.5.5
+network 10.10.10.16 0.0.0.3 area 0
+network 10.10.10.20 0.0.0.3 area 0
+network 192.168.21.0 0.0.0.255 area 0
+network 192.168.22.0 0.0.0.255 area 0
+network 192.168.23.0 0.0.0.255 area 0
+network 192.168.24.0 0.0.0.255 area 0
+passive-interface gig0/0
+ex
 
 
 Iroda_SW1
