@@ -1,0 +1,270 @@
+VIP_SW1
+
+vlan 10
+name iroda_szerverkozpont
+vlan 20
+name jatekterem
+vlan 30
+name VIP
+vlan 99
+name Native
+vlan 999
+name Unused
+ex
+
+vtp domain NagytetVIP
+vtp mode server
+vtp password cisco123
+vtp version 2
+
+int r gig0/1,fa0/1-4
+swit mod tru
+swit tru nat vlan 99
+swit tru all vlan 10,20,30,99
+ex
+
+spanning-tree mode rapid-pvst
+
+int r fa0/1-2
+channel-group 1 mode active
+ex
+
+int r fa0/3-4
+channel-group 4 mode pass
+ex
+
+int r fa0/9-24,gig0/2
+swit mod acc
+swit acc vlan 999
+shutdown
+ex
+
+VIP_SW2
+
+vlan 10
+name iroda_szerverkozpont
+vlan 20
+name jatekterem
+vlan 30
+name VIP
+vlan 99
+name Native
+vlan 999
+name Unused
+ex
+
+vtp domain NagytetVIP
+vtp mode server
+vtp password cisco123
+vtp version 2
+
+int r fa0/1-4
+swit mod tru
+swit tru nat vlan 99
+swit tru all vlan 10,20,30,99
+ex
+
+int fa0/5
+swit mod acc
+swit acc vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/6
+swit mod acc
+swit acc vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/7
+swit mod acc
+swit acc vlan 30
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+spanning-tree mode rapid-pvst
+
+int r fa0/1-2
+channel-group 2 mode active
+ex
+
+int r fa0/3-4
+channel-group 1 mode pass
+ex
+
+int r fa0/8-24,gig0/1-2
+swit mod acc
+swit acc vlan 999
+shutdown
+ex
+
+VIP SW4
+
+vlan 10
+name iroda_szerverkozpont
+vlan 20
+name jatekterem
+vlan 30
+name VIP
+vlan 99
+name Native
+vlan 999
+name Unused
+ex
+
+vtp domain NagytetVIP
+vtp mode server
+vtp password cisco123
+vtp version 2
+
+int r fa0/1-4
+swit mod tru
+swit tru nat vlan 99
+swit tru all vlan 10,20,30,99
+ex
+
+int fa0/5
+swit mod acc
+swit acc vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/6
+swit mod acc
+swit acc vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/7
+swit mod acc
+swit acc vlan 30
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+panning-tree mode rapid-pvst
+
+int r fa0/1-2
+channel-group 2 mode active
+ex
+
+int r fa0/3-4
+channel-group 1 mode pass
+ex
+
+int r fa0/8-24,gig0/1-2
+swit mod acc
+swit acc vlan 999
+shutdown
+ex
+
+VIP SW3
+
+vlan 10
+name iroda_szerverkozpont
+vlan 20
+name jatekterem
+vlan 30
+name VIP
+vlan 99
+name Native
+vlan 999
+name Unused
+ex
+
+vtp domain NagytetVIP
+vtp mode server
+vtp password cisco123
+vtp version 2
+
+int r fa0/1-4
+swit mod tru
+swit tru nat vlan 99
+swit tru all vlan 10,20,30,99
+ex
+
+int fa0/5
+swit mod acc
+swit acc vlan 10
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/6
+swit mod acc
+swit acc vlan 20
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int fa0/7
+swit mod acc
+swit acc vlan 30
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+panning-tree mode rapid-pvst
+
+int r fa0/1-2
+channel-group 2 mode active
+ex
+
+int r fa0/3-4
+channel-group 1 mode pass
+ex
+
+int r fa0/8-24,gig0/1-2
+swit mod acc
+swit acc vlan 999
+shutdown
+ex
+
+VIP_Szalon
+
+int gig0/0.10
+enc dot 10
+ip add 192.168.31.1 255.255.255.0
+desc Vlan 10 atjaroja
+ip help 192.168.34.10
+ex
+
+int gig0/0.20
+enc dot 20
+ip add 192.168.32.1 255.255.255.0
+desc Vlan 20 atjaroja
+ip help 192.168.34.10
+ex
+
+int gig0/0.30
+enc dot 30
+ip add 192.168.33.1 255.255.255.0
+desc Vlan 30 atjaroja
+ip help 192.168.34.10
+ex
+
+int gig0/0.99
+enc dot 99 Native
+ip add 192.168.34.1 255.255.255.0
+desc Vlan 99 Native atjaroja
+ip help 192.168.34.10
+ex
+
+router ospf 10
+router-id 6.6.6.6
+network 10.10.10.0 0.0.0.3 area 0
+passive-interface gig0/0
+ex
+
+VIP_Exclusive
+
+router ospf 10
+router-id 7.7.7.7
+network 10.10.10.0 0.0.0.3 area 0
+passive-interface gig0/0
+ex
