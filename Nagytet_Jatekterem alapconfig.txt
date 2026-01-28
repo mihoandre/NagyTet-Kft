@@ -40,6 +40,31 @@ crypto key generate rsa
 
 ip ssh version 2
 
+interface GigabitEthernet0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.11.1 255.255.255.0
+
+interface GigabitEthernet0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.12.1 255.255.255.0
+
+interface GigabitEthernet0/0.30
+ encapsulation dot1Q 30
+ ip address 192.168.13.1 255.255.255.0
+
+interface GigabitEthernet0/0.99
+ encapsulation dot1Q 99
+ ip address 192.168.14.1 255.255.255.0
+
+interface Serial0/0/0
+ description GAME_Belepo fele
+ ip address 50.50.50.1 255.255.255.252
+ clock rate 4000000
+
+interface Serial0/0/0
+ description GAME_Belepo fele
+ ip address 50.50.50.1 255.255.255.252
+ clock rate 4000000
 
 
 GAME_Belepo
@@ -86,6 +111,55 @@ crypto key generate rsa
 
 ip ssh version 2
 
+ipv6 unicast-routing 
+
+
+
+ip dhcp excluded-address 192.168.15.99 192.168.15.200
+ip dhcp excluded-address 192.168.16.99 192.168.16.200
+
+ip dhcp pool GAME_Belepo_pool_1
+ network 192.16.15.0 255.255.255.0
+ default-router 192.16.15.1
+ dns-server 192.168.24.11
+exit
+
+ip dhcp pool GAME_Belepo_pool_3
+ network 192.168.16.0 255.255.255.0
+ default-router 192.168.16.1
+ dns-server 192.168.24.11
+exit
+
+
+ipv6 dhcp pool GAME_Belepo_pool_2
+ address prefix 2001:acad:a:db8::10/64
+exit 
+
+ipv6 dhcp pool GAME_Belepo_pool_4
+ address prefix 2001:db8:b::10/64
+exit
+
+interface GigabitEthernet0/0
+ description GAME_Vendeg_CO fele
+
+interface GigabitEthernet0/1
+ description GAME_Belepo_SW2 fele
+ ip address dhcp
+ ipv6 address 2001:DB8:B::1/64
+ ipv6 dhcp server GAME_Belepo_pool_4
+
+
+interface GigabitEthernet0/2
+ description GAME_Belepo_SW2 fele
+ ip address dhcp
+ ipv6 address 2001:DB8:A::10/64
+ ipv6 nd managed-config-flag
+ ipv6 address dhcp
+ ipv6 dhcp server GAME_Belepo_pool_2
+
+interface Serial0/0/0
+ description Jatekterem fele
+ ip address 50.50.50.2 255.255.255.252
 
 
 
@@ -177,6 +251,65 @@ crypto key generate rsa
 
 ip ssh version 2
 
+ip routing
+
+spanning-tree mode pvst
+spanning-tree portfast bpduguard default
+
+interface GigabitEthernet1/0/1
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+exit
+
+interface GigabitEthernet1/0/2
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+exit
+
+interface GigabitEthernet1/0/3
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 2 mode active
+exit
+
+interface GigabitEthernet1/0/4
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 2 mode active
+exit
+
+interface GigabitEthernet1/0/5
+ switchport mode acces
+switchport acces vlan 10
+exit
+
+interface GigabitEthernet1/0/6
+ switchport access vlan 20
+ switchport mode access
+
+interface GigabitEthernet1/0/7
+ switchport access vlan 30
+ switchport mode access
+
+int range g1/0/23 
+sh
+exit
+
+interface GigabitEthernet1/0/24
+ description Jatekterem fele
+ no switchport
+ ip address 10.10.10.1 255.255.255.0
+
 
 
 GAME_MLS2
@@ -224,6 +357,47 @@ crypto key generate rsa
 ip ssh version 2
 
 
+spanning-tree mode pvst
+spanning-tree portfast bpduguard default
+
+interface GigabitEthernet1/0/1
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 3 mode active
+
+interface GigabitEthernet1/0/2
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 3 mode active
+
+interface GigabitEthernet1/0/3
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode passive
+
+interface GigabitEthernet1/0/4
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode passive
+
+interface GigabitEthernet1/0/8
+ switchport access vlan 10
+ switchport mode Access
+
+int range g1/0/5-7
+sh
+
+int range g1/0/9-24
+sh
+
 
 GAME_MLS3
 
@@ -268,7 +442,52 @@ crypto key generate rsa
 
 ip ssh version 2
 
+spanning-tree mode pvst
+spanning-tree portfast bpduguard default
 
+interface GigabitEthernet1/0/1
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 2 mode passive
+
+interface GigabitEthernet1/0/2
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 2 mode passive
+
+interface GigabitEthernet1/0/3
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 4 mode passive
+
+interface GigabitEthernet1/0/4
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 4 mode passive
+
+interface GigabitEthernet1/0/5
+ switchport access vlan 10
+ switchport mode access
+
+interface GigabitEthernet1/0/6
+ switchport access vlan 20
+ switchport mode access
+
+interface GigabitEthernet1/0/7
+ switchport access vlan 30
+ switchport mode access
+
+
+int range g1/0/8-24 
+sh
 
 GAME_MLS4
 
@@ -314,10 +533,53 @@ crypto key generate rsa
 ip ssh version 2
 
 
+spanning-tree mode pvst
+spanning-tree portfast bpduguard default
 
 
+interface GigabitEthernet1/0/1
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 4 mode active
+
+interface GigabitEthernet1/0/2
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 4 mode active
+
+interface GigabitEthernet1/0/3
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 3 mode passive
+
+interface GigabitEthernet1/0/4
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,99
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 3 mode passive
+
+interface GigabitEthernet1/0/5
+ switchport access vlan 10
+ switchport mode access
+
+interface GigabitEthernet1/0/6
+ switchport access vlan 20
+ switchport mode access
+
+interface GigabitEthernet1/0/7
+ switchport access vlan 30
+ switchport mode access
 
 
+int range g1/0/8-24 
+sh
 
 
 
