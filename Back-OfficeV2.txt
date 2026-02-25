@@ -1,0 +1,481 @@
+													ISP
+
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname ISP
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+username Center password cisco123
+
+int se0/0/0
+interface Serial0/0/0
+ip address 209.165.64.1 255.255.255.252
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username ISP password cisco123
+no shutdown
+ex
+ip route 0.0.0.0 0.0.0.0 209.165.64.2
+
+
+												Center
+
+
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Center
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+int se0/0/0
+ip add 40.40.20.2 255.255.255.252
+desc Kaszino_public fele
+ip nat outside
+no sh
+ex
+
+username ISP password cisco123
+
+int se0/0/1
+ip add 209.165.64.2 255.255.255.252
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username Center password cisco123
+desc ISP fele
+ip nat outside
+no sh
+ex
+
+int se0/1/0
+ip add 40.40.30.1 255.255.255.252
+clock rate 4000000
+desc Backoffice fele
+ip nat outside
+no sh
+
+int se0/1/1
+ip add 40.40.40.1 255.255.255.252
+desc Bank fele
+ip nat outside
+no sh
+
+int gig0/0
+ip add 192.168.20.1 255.255.255.0
+desc Szerverkozpont fele
+ip nat inside
+no sh
+ip route 0.0.0.0 0.0.0.0 209.165.64.1
+
+router ospf 10
+router-id 3.3.3.3
+
+network 40.40.20.0 0.0.0.3 area 0
+network 40.40.30.0 0.0.0.3 area 0
+network 40.40.40.0 0.0.0.3 area 0
+network 192.168.20.1 0.0.0.255 area 0
+red static
+def ori
+pass gig0/0
+exit
+ip nat inside source static 192.168.20.100 209.16.100.100
+ip nat inside source static 192.168.20.101 209.16.100.10
+access-list 10 permit host 192.168.20.102
+ip nat pool DYNPOOL 209.16.100.20 209.16.100.20 netmask 255.255.255.0
+ip nat inside source list 10 pool DYNPOOL 
+
+
+											Backoffice
+
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Backoffice
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+int se0/0/0
+ip add 40.40.30.1 255.255.255.252
+desc Center fele
+no sh
+
+int gig0/0
+ip add 20.20.10.1 255.255.255.0
+ip help 209.16.100.10
+desc Office_MLS1 fele
+no sh
+
+int gig0/1
+ip add 20.20.20.1 255.255.255.0
+ipv6 address 2001:db8:abcd:1234::1/64
+desc Security fele
+no sh
+ex
+ip dhcp excluded-address 20.20.20.1 20.20.20.99
+
+ip dhcp pool DHCPv4_LAN
+network 20.20.20.0 255.255.255.0
+default-router 20.20.20.1
+dns-server 209.16.100.100
+domain-name nagytet.hu
+exit
+
+ipv6 unicast-routing
+
+
+router ospf 10
+router-id 4.4.4.4
+network 20.20.20.0 0.0.0.255 area 0
+network 20.20.10.0 0.0.0.255 area 0
+network 40.40.30.0 0.0.0.3 area 0
+pass gig0/0
+pass gig0/1
+exit
+
+											Security
+
+
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Security
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+										Szerverkozpont
+
+
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Szerverkozpont
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+
+												Office_MLS1
+
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Office_MLS1
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+int r gig1/0/1-2
+channel-group 1 mode active
+ex
+
+int r gig1/0/3-4
+channel-group 3 mode pas
+ex
+spanning-tree mode rapid-pvst
+
+int gig1/0/5
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+
+												Office_MLS2
+
+
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Office_MLS2
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+int r gig1/0/1-2
+channel-group 3 mode active
+ex
+
+int r gig1/0/3-4
+channel-group 2 mode pas
+ex
+spanning-tree mode rapid-pvst
+
+
+int r gig1/0/5-10
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+
+												Office_MLS3
+
+
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Office_MLS3
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+int r gig1/0/1-2
+channel-group 2 mode active
+ex
+
+int r gig1/0/3-4
+channel-group 1 mode pas
+ex
+spanning-tree mode rapid-pvst
+
+int r gig1/0/5-10
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
