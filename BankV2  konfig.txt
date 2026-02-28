@@ -1,0 +1,248 @@
+Bank
+
+enable
+conf t
+int gi0/0
+no shut
+int gi0/0.30
+encap dot1Q 30
+ip add 30.30.30.1 255.255.255.0
+ip helper-address 30.30.90.10
+exit
+int gi0/0.40
+encap dot1Q 40
+ip add 30.30.40.1 255.255.255.0
+ip helper-address 30.30.90.10
+exit
+int gi0/0.50
+encap dot1Q 50
+ip add 30.30.50.1 255.255.255.0
+ip helper-address 30.30.90.10
+exit
+int gi0/0.90
+encap dot1Q 90
+ip add 30.30.90.1 255.255.255.0
+exit
+int gi0/0.99
+encap dot1Q 99 native
+exit
+
+enable
+conf t
+interface gi0/0.30
+ip helper-address 30.30.90.10
+exit
+interface gi0/0.40
+ip helper-address 30.30.90.10
+exit
+interface gi0/0.50
+ip helper-address 30.30.90.10
+exit
+interface gi0/0.90
+ip helper-address 30.30.90.10
+exit
+exit
+interface gi0/0.99
+ip helper-address 30.30.99.10
+exit
+
+
+SW1
+enable
+conf t
+vlan 30
+vlan 40
+vlan 50
+vlan 90
+vlan 99
+vlan 999
+exit
+
+spanning-tree mode rapid-pvst
+spanning-tree vlan 1,30,40,50,90,99,999 priority 4096
+
+int range fa0/1 - 2
+channel-group 1 mode desirable
+switchport mode trunk
+switchport trunk native vlan 99
+
+int range fa0/3 - 4
+channel-group 2 mode auto
+switchport mode trunk
+switchport trunk native vlan 99
+
+int gi0/1
+switchport mode trunk
+switchport trunk native vlan 99
+
+int range fa0/5-6
+switchport mode access
+switchport access vlan 90
+spanning-tree portfast
+
+int range fa0/7 - 24
+switchport access vlan 999
+shutdown
+int gig0/2
+switchport access vlan 999
+shutdown
+
+int po1
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+int po2
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+
+
+sw2
+
+enable
+conf t
+vlan 30
+vlan 40
+vlan 50
+vlan 90
+vlan 99
+vlan 999
+exit
+
+spanning-tree mode rapid-pvst
+
+int range fa0/1 - 2
+channel-group 2 mode desirable
+switchport mode trunk
+switchport trunk native vlan 99
+
+
+int range fa0/3 - 4
+channel-group 3 mode auto
+switchport mode trunk
+switchport trunk native vlan 99
+
+
+int range fa0/5 - 10
+switchport mode access
+switchport access vlan 30
+spanning-tree portfast
+spanning-tree bpduguard enable
+
+
+int range fa0/11 - 24
+switchport access vlan 999
+shutdown
+int range gig0/1-2
+switchport access vlan 999
+shutdown
+
+
+int po2
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+int po3
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+sw3
+
+enable
+conf t
+vlan 30
+vlan 40
+vlan 50
+vlan 90
+vlan 99
+vlan 999
+exit
+
+spanning-tree mode rapid-pvst
+
+int range fa0/1 - 2
+channel-group 3 mode desirable
+switchport mode trunk
+switchport trunk native vlan 99
+
+
+int range fa0/3 - 4
+channel-group 4 mode auto
+switchport mode trunk
+switchport trunk native vlan 99
+
+
+int range fa0/5 - 9
+switchport mode access
+switchport access vlan 40
+spanning-tree portfast
+spanning-tree bpduguard enable
+
+
+int range fa0/10 - 24
+switchport access vlan 999
+shutdown
+int range gig0/1-2
+switchport access vlan 999
+shutdown
+
+
+int po3
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+int po4
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+
+sw4
+
+enable
+conf t
+vlan 30
+vlan 40
+vlan 50
+vlan 90
+vlan 99
+vlan 999
+exit
+
+spanning-tree mode rapid-pvst
+
+int range fa0/1 - 2
+channel-group 4 mode desirable
+switchport mode trunk
+switchport trunk native vlan 99
+
+
+int range fa0/3 - 4
+channel-group 1 mode auto
+switchport mode trunk
+switchport trunk native vlan 99
+
+
+int range fa0/5 - 9
+switchport mode access
+switchport access vlan 50
+spanning-tree portfast
+spanning-tree bpduguard enable
+
+
+int range fa0/10 - 24
+switchport access vlan 999
+shutdown
+int range gig0/1-2
+switchport access vlan 999
+shutdown
+
+int po3
+switchport mode trunk
+switchport trunk native vlan 99
+exit
+int po4
+switchport mode trunk
+switchport trunk native vlan 99
+exit
