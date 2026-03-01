@@ -54,7 +54,6 @@ vlan 30
 vlan 40
 vlan 50
 vlan 90
-vlan 99
 vlan 999
 exit
 
@@ -64,16 +63,16 @@ spanning-tree vlan 1,30,40,50,90,99,999 priority 4096
 int range fa0/1 - 2
 channel-group 1 mode desirable
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 
 int range fa0/3 - 4
 channel-group 2 mode auto
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 
 int gi0/1
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 
 int range fa0/5-6
 switchport mode access
@@ -87,14 +86,11 @@ int gig0/2
 switchport access vlan 999
 shutdown
 
-int po1
-switchport mode trunk
-switchport trunk native vlan 99
-exit
-int po2
-switchport mode trunk
-switchport trunk native vlan 99
-exit
+interface Port-channel1
+switchport trunk native vlan 90
+
+interface Port-channel2
+switchport trunk native vlan 90
 
 
 
@@ -106,7 +102,6 @@ vlan 30
 vlan 40
 vlan 50
 vlan 90
-vlan 99
 vlan 999
 exit
 
@@ -141,11 +136,11 @@ shutdown
 
 int po2
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 exit
 int po3
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 exit
 
 sw3
@@ -165,13 +160,13 @@ spanning-tree mode rapid-pvst
 int range fa0/1 - 2
 channel-group 3 mode desirable
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 
 
 int range fa0/3 - 4
 channel-group 4 mode auto
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 
 
 int range fa0/5 - 9
@@ -191,11 +186,11 @@ shutdown
 
 int po3
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 exit
 int po4
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 exit
 
 sw4
@@ -215,13 +210,13 @@ spanning-tree mode rapid-pvst
 int range fa0/1 - 2
 channel-group 4 mode desirable
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 
 
 int range fa0/3 - 4
 channel-group 1 mode auto
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 
 
 int range fa0/5 - 9
@@ -240,9 +235,9 @@ shutdown
 
 int po3
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 exit
 int po4
 switchport mode trunk
-switchport trunk native vlan 99
+switchport trunk native vlan 90
 exit
