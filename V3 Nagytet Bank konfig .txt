@@ -1,0 +1,329 @@
+MLS 
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Bank_MLS
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+ip routing
+
+vlan 210
+name B_Penztar
+vlan 220
+name B_Konyveles
+vlan 230
+name B_Hitelezes
+vlan 299
+name Native
+
+vlan 240
+name Bank_office_WiFi
+vlan 250
+name Bank_vendeg_WiFi
+vlan 300
+name Wifi_Native
+exit
+
+int vlan 210
+ip add 10.10.21.1 255.255.255.0
+int vlan 220
+ip add 10.10.22.1 255.255.255.0
+int vlan 230
+ip add 10.10.23.1 255.255.255.0
+int vlan 299
+ip add 10.10.29.11 255.255.255.0
+exit
+
+int Gig1/0/1
+no switchport
+ip add 10.10.1.2 255.255.255.252
+no sh
+
+int range Gig1/0/2-3
+switchport mode access
+switchport access vlan 299
+
+int range Gig1/0/9-14
+switchport mode access
+switchport access vlan 210
+
+int range Gig1/0/15-19
+switchport mode access
+switchport access vlan 220
+
+int range Gig1/0/4-8
+switchport mode access
+switchport access vlan 230
+
+int vlan 210
+ip helper-address 10.10.29.10
+int vlan 220
+ip helper-address 10.10.29.10
+int vlan 230
+ip helper-address 10.10.29.10
+exit
+
+ip route 0.0.0.0 0.0.0.0 10.10.1.1
+
+
+Bank router
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Bank
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+int Gig0/0
+ip add 10.10.1.1 255.255.255.252
+no sh
+exit
+
+
+int Gig0/1.240
+encapsulation dot1Q 240
+ip address 10.10.24.1 255.255.255.0
+exit
+
+int Gig0/1.250
+encapsulation dot1Q 250
+ip address 10.10.25.1 255.255.255.0
+exit
+
+int Gig0/1.300
+encapsulation dot1Q 300 native
+ip address 10.10.30.1 255.255.255.0
+exit
+
+int Gig0/1
+no sh
+
+int Serial0/0/0
+ip add 209.165.40.2 255.255.255.252
+no sh
+exit
+
+ip route 10.10.21.0 255.255.255.0 10.10.1.2
+ip route 10.10.22.0 255.255.255.0 10.10.1.2
+ip route 10.10.23.0 255.255.255.0 10.10.1.2
+ip route 10.10.24.0 255.255.255.0 10.10.1.2
+ip route 10.10.25.0 255.255.255.0 10.10.1.2
+ip route 10.10.29.0 255.255.255.0 10.10.1.2
+ip route 10.10.30.0 255.255.255.0 10.10.1.2
+ip route 0.0.0.0 0.0.0.0 209.165.40.1
+
+
+ip dhcp pool AP_OFFICE
+network 10.10.24.0 255.255.255.0
+default-router 10.10.24.1
+dns-server 8.8.8.8
+option 43 ip 10.10.30.20
+exit
+
+ip dhcp pool AP_VENDEG
+network 10.10.25.0 255.255.255.0
+default-router 10.10.25.1
+dns-server 8.8.8.8
+option 43 ip 10.10.30.20
+exit
+
+
+
+Bank Wireless switch
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Bank_Wireless
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+vlan 240
+name Bank_office_WiFi
+vlan 250
+name Bank_vendeg_WiFi
+vlan 300
+name Wireless_Native
+exit
+
+int Gig0/1
+switchport mode trunk
+switchport trunk native vlan 300
+exit
+
+int Gig0/2
+switchport mode trunk
+switchport trunk native vlan 300
+
+int fa0/1
+switchport mode trunk
+switchport trunk native vlan 240
+exit
+
+int fa0/2
+switchport mode trunk
+switchport trunk native vlan 250
+exit
+
+ISP3
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname ISP3
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+username ISP3 password cisco123
+
+int se0/1/0
+ip add 209.165.40.1 255.255.255.252
+no sh
+desc Bank fele
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username Bank password cisco123
+ex
+
+access-list 1 permit 10.10.24.0 0.0.0.255
+access-list 1 permit 10.10.25.0 0.0.0.255
+
+access-list 1 permit host 10.10.29.100
+
+ip nat pool Bank_Pool 209.165.40.10 209.165.40.50 netmask 255.255.255.0
+ip nat inside source list 1 pool Bank_Pool
+
+WLC
+admin username admin
+admin password Cisco123
