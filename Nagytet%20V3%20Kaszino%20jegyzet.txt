@@ -1,0 +1,228 @@
+Kaszino_MLS
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Kaszino_MLS
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+ip routing
+
+vlan 10
+name K_Penztar
+vlan 20
+name K_Adatrogzites
+vlan 30
+name CCTV
+vlan 40
+name Public
+vlan 50
+name K_Office_Wifi
+vlan 60
+name K_Vendeg_Wifi
+vlan 99
+name Native
+vlan 999
+name BH
+exit
+
+
+int vlan 10
+ip add 192.168.10.1 255.255.255.0
+ip helper-address 192.168.99.10
+desc vlan 10 atjaroja
+ex
+int vlan 20
+ip add 192.168.20.1 255.255.255.0
+ip helper-address 192.168.99.10
+desc vlan 20 atjaroja
+ex
+
+int vlan 30
+ip add 192.168.30.1 255.255.255.0
+ip helper-address 192.168.99.10
+desc vlan 30 atjaroja
+ex
+
+int vlan 40
+ip add 192.168.40.1 255.255.255.0
+ip helper-address 192.168.99.10
+desc vlan 40 atjaroja
+ex
+
+int vlan 50
+ip add 192.168.50.1 255.255.255.0
+ip helper-address 192.168.99.10
+desc vlan 50 atjaroja
+ex
+
+int vlan 60
+ip add 192.168.60.1 255.255.255.0
+ip helper-address 192.168.99.10
+desc vlan 60 atjaroja
+ex
+
+int vlan 99
+ip add 192.168.99.1 255.255.255.0
+ip helper-address 192.168.99.20
+desc vlan 99 native atjaroja
+ex
+
+int Gig1/0/1
+no switchport
+ip add 192.168.1.2 255.255.255.252
+desc Kaszino fele
+no sh
+ex
+
+
+int range Gig1/0/8-9,Gig1/0/13
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,20,30,40,50,60,99
+exit
+
+int range Gig1/0/2-4
+swit mod acc
+swit acc vlan 10
+
+int range Gig1/0/5-7
+swit mod acc
+swit acc vlan 20
+
+int range Gig1/0/16-17
+swit mod acc
+swit acc vlan 30
+
+int range Gig1/0/10-12
+swit mod acc
+swit acc vlan 40
+
+int range Gig1/0/14-15
+swit mod acc
+swit acc vlan 99
+
+int r gig1/0/18-24,gig1/1/1-4
+swit mod acc
+swit acc vlan 999
+
+
+
+ip route 0.0.0.0 0.0.0.0 192.168.1.1
+
+Kaszino
+ena
+clock set 12:00:00 22 Feb 2026
+configure terminal
+
+hostname Kaszino
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+login block-for 120 attempts 3 within 60
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+username ISP1 password cisco123
+
+int gig0/0
+ip add 192.168.1.1 255.255.255.252
+desc Kaszino_MLS fele
+ip nat in
+no sh
+ex
+
+int se0/0/0
+ip add 209.165.10.2 255.255.255.252
+no sh
+desc ISP1 fele
+ip nat ou
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username Kaszino password cisco123
+ex
+
+access-list 1 permit 192.168.50.0 0.0.0.255
+access-list 1 permit 192.168.60.0 0.0.0.255
+
+access-list 1 permit host 192.168.99.100
+
+ip nat pool Kaszino_Pool 209.165.10.10 209.165.10.50 netmask 255.255.255.0
+ip nat inside source list 1 pool Kaszino_Pool
+
+ip route 0.0.0.0 0.0.0.0 209.165.10.1
+
+
+ip route 192.168.10.0 255.255.255.0 192.168.1.2
+ip route 192.168.20.0 255.255.255.0 192.168.1.2
+ip route 192.168.30.0 255.255.255.0 192.168.1.2
+ip route 192.168.40.0 255.255.255.0 192.168.1.2
+ip route 192.168.50.0 255.255.255.0 192.168.1.2
+ip route 192.168.60.0 255.255.255.0 192.168.1.2
+ip route 192.168.99.0 255.255.255.0 192.168.1.2
+
+
+Kaszino_WLC
+username: K_admin
+password: Cisco123
