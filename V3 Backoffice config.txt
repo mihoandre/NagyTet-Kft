@@ -1,0 +1,443 @@
+===========================================================================  Backoffice_SW1
+ena
+clock set 12:00:00 14 Marc 2026
+configure terminal
+
+hostname Backoffice_SW1
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+vtp domain nagytet
+vtp mode client
+vtp password cisco123
+
+
+int r fa0/1-2
+channel-group 1 mode active
+ex
+
+int r fa0/3-4
+channel-group 3 mode pas
+ex
+spanning-tree mode rapid-pvst
+
+
+int r fa0/5-9
+switch mod acc
+swit acc vlan 100
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+interface range fa0/1-4, gi0/1
+switchport mode trunk
+switchport nonegotiate
+switchport trunk native vlan 199
+switchport trunk allowed vlan 100,110,120,199
+
+interface vlan 199
+ip address 172.16.99.5 255.255.255.0
+no shutdown
+
+
+===========================================================================  Backoffice_SW2
+ena
+clock set 12:00:00 14 Marc 2026
+configure terminal
+
+hostname Backoffice_SW2
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+vlan 100
+name security
+vlan 110
+name iroda
+vlan 120
+name titkarsag
+vlan 199
+name MGMT
+ex
+
+vtp domain nagytet
+vtp mode server
+vtp password cisco123
+vtp version 2
+
+int r fa0/1-2
+channel-group 2 mode active
+ex
+
+int r fa0/3-4
+channel-group 1 mode pas
+ex
+spanning-tree mode rapid-pvst
+
+
+int r fa0/5-7
+switch mod acc
+swit acc vlan 199
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+interface range fa0/1-4, gi0/1
+switchport mode trunk
+switchport nonegotiate
+switchport trunk native vlan 199
+switchport trunk allowed vlan 100,110,120,199
+
+interface vlan 199
+ip address 172.16.99.6 255.255.255.0
+no shutdown
+ex
+
+===========================================================================  Backoffice_SW3
+
+ena
+clock set 12:00:00 14 Marc 2026
+configure terminal
+
+hostname Backoffice_SW3
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+vtp domain nagytet
+vtp mode client
+vtp password cisco123
+
+int r fa0/1-2
+channel-group 3 mode active
+ex
+
+int r fa0/3-4
+channel-group 2 mode pas
+ex
+spanning-tree mode rapid-pvst
+
+
+int r fa0/5-12
+switch mod acc
+swit acc vlan 110
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+int r fa0/13-14
+switch mod acc
+swit acc vlan 120
+spanning-tree portfast
+spanning-tree bpduguard enable
+ex
+
+interface range fa0/1-4, gi0/1
+switchport mode trunk
+switchport nonegotiate
+switchport trunk native vlan 199
+switchport trunk allowed vlan 100,110,120,199
+
+interface vlan 199
+ip address 172.16.99.7 255.255.255.0
+no shutdown
+
+===========================================================================  Backoffice_Standby
+
+ena
+clock set 12:00:00 14 Marc 2026
+configure terminal
+
+hostname Backoffice_Standby
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+username ISP2 password cisco123
+
+interface g0/0
+no sh
+
+interface g0/0.100
+encapsulation dot1Q 100
+ip address 172.16.10.2 255.255.255.0
+ip nat in
+desc Vlan 100 standby atjaroja
+ip helper-address 172.16.99.11
+standby 10 ip 172.16.10.1
+standby 10 priority 100
+standby 10 preempt
+ ex
+
+interface g0/0.110
+encapsulation dot1Q 110
+ip address 172.16.11.2 255.255.255.0
+ip nat in
+desc Vlan 110 standby atjaroja
+ip helper-address 172.16.99.11
+standby 11 ip 172.16.11.1
+standby 11 priority 100
+standby 11 preempt
+ ex
+
+interface g0/0.120
+encapsulation dot1Q 120
+ip address 172.16.12.2 255.255.255.0
+ip nat in
+desc Vlan 120 standby atjaroja
+ip helper-address 172.16.99.11
+standby 12 ip 172.16.12.1
+standby 12 priority 100
+standby 12 preempt
+ex
+
+interface g0/0.199
+encapsulation dot1Q 199 native
+ip address 172.16.99.2 255.255.255.0
+ip nat in
+desc Vlan 199 native standby atjaroja
+standby 99 ip 172.16.99.1
+standby 99 priority 100
+standby 99 preempt
+ex
+
+int se0/0/0
+ip add 209.165.20.2 255.255.255.252
+no sh
+ip nat ou
+desc ISP2 fele
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username Backofficestandby password cisco123
+ex
+
+access-list 1 permit host 172.16.99.100
+ip nat pool Backoffice_Standby_Pool 209.165.20.10 209.165.20.30 netmask 255.255.255.0
+ip nat inside source list 1 pool Backoffice_Standby_Pool
+ip nat inside source static 172.16.99.10 209.165.20.5
+ip nat inside source static 172.16.99.11 209.165.20.6
+
+ip route 0.0.0.0 0.0.0.0 209.165.20.1
+
+
+===========================================================================  Backoffice_Active
+
+ena
+clock set 12:00:00 14 Marc 2026
+configure terminal
+
+hostname Backoffice_Active
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+username ISP3 password cisco123
+
+interface g0/0
+ no shutdown
+
+interface g0/0.100
+encapsulation dot1Q 100
+ip address 172.16.10.3 255.255.255.0
+ip nat in
+desc Vlan 100 active atjaroja
+ip helper-address 172.16.99.11
+standby 10 ip 172.16.10.1
+standby 10 priority 110
+standby 10 preempt
+ ex
+
+interface g0/0.110
+encapsulation dot1Q 110
+ip address 172.16.11.3 255.255.255.0
+ip nat in
+desc Vlan 110 active atjaroja
+ip helper-address 172.16.99.11
+standby 11 ip 172.16.11.1
+standby 11 priority 110
+standby 11 preempt
+ ex
+
+interface g0/0.120
+encapsulation dot1Q 120
+ip address 172.16.12.3 255.255.255.0
+ip nat in
+desc Vlan 120 active atjaroja
+ip helper-address 172.16.99.11
+standby 12 ip 172.16.12.1
+standby 12 priority 110
+standby 12 preempt
+ex
+
+interface g0/0.199
+encapsulation dot1Q 199 native
+ip address 172.16.99.3 255.255.255.0
+ip nat in
+desc Vlan 199 native active atjaroja
+standby 99 ip 172.16.99.1
+standby 99 priority 110
+standby 99 preempt
+ex
+
+int se0/0/0
+ip add 209.165.30.2 255.255.255.252
+no sh
+ip nat ou
+desc ISP3 fele
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username Backofficeactive password cisco123
+ex
+
+access-list 1 permit host 172.16.99.100
+ip nat pool Backoffice_Active_Pool 209.165.30.10 209.165.30.30 netmask 255.255.255.0
+ip nat inside source list 1 pool Backoffice_Active_Pool
+ip nat inside source static 172.16.99.10 209.165.30.5
+ip nat inside source static 172.16.99.11 209.165.30.6
+
+ip route 0.0.0.0 0.0.0.0 209.165.30.1

@@ -1,0 +1,286 @@
+===========================================================================  ISP1
+
+ena
+clock set 12:00:00 14 Marc 2026
+configure terminal
+
+hostname ISP1
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+username Kaszino password cisco123
+
+int se0/1/0
+ip add 209.165.10.1 255.255.255.252
+no sh
+desc Kaszino fele
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username ISP1 password cisco123
+
+ex
+
+int se0/0/0
+ip add 20.20.20.1 255.255.255.252
+no sh
+desc ISP3 fele
+ex
+
+int se0/0/1
+ip add 20.20.10.1 255.255.255.252
+no sh
+desc ISP2 fele
+ex
+
+
+router ospf 10
+router-id 1.1.1.1
+netw 20.20.20.0 0.0.0.3 are 0
+netw 20.20.10.0 0.0.0.3 are 0
+no au
+red static sub
+ex
+
+ip route 192.168.10.0 255.255.255.0 209.165.10.2
+ip route 192.168.20.0 255.255.255.0 209.165.10.2
+ip route 192.168.30.0 255.255.255.0 209.165.10.2
+ip route 192.168.40.0 255.255.255.0 209.165.10.2
+ip route 192.168.50.0 255.255.255.0 209.165.10.2
+ip route 192.168.60.0 255.255.255.0 209.165.10.2
+ip route 192.168.99.0 255.255.255.0 209.165.10.2
+
+ip route 192.168.1.0 255.255.255.252 209.165.10.2
+
+ip route 209.165.10.0 255.255.255.0 209.165.10.2
+
+===========================================================================  ISP2
+
+ena
+clock set 12:00:00 14 Marc 2026
+configure terminal
+
+hostname ISP2
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+username Backofficestandby password cisco123
+
+int se0/1/0
+ip add 209.165.20.1 255.255.255.252
+no sh
+ip nat ou
+desc Backoffice_Standby fele
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username ISP2 password cisco123
+ex
+
+int se0/0/1
+ip add 20.20.20.2 255.255.255.252
+no sh
+ip nat ou
+desc ISP1 fele
+ex
+
+int se0/0/0
+ip add 20.20.30.1 255.255.255.252
+no sh
+ip nat ou
+desc ISP3 fele
+ex
+
+int gig0/0
+ip add 192.168.100.1 255.255.255.0
+no sh
+desc DNS fele
+ip nat in
+ex
+
+ip route 172.16.10.0 255.255.255.0 209.165.20.2
+ip route 172.16.11.0 255.255.255.0 209.165.20.2
+ip route 172.16.12.0 255.255.255.0 209.165.20.2
+ip route 172.16.99.0 255.255.255.0 209.165.20.2
+ip route 8.8.8.8 255.255.255.255 Null0
+ip route 209.165.20.0 255.255.255.0 209.165.20.2
+
+router ospf 10
+router-id 2.2.2.2
+netw 20.20.20.0 0.0.0.3 are 0
+netw 20.20.30.0 0.0.0.3 are 0
+netw 192.168.100.0 0.0.0.255 are 0
+network 8.8.8.8 0.0.0.0 area 0
+pass gig0/0
+no au
+red static sub
+ex
+
+ip nat inside source static 192.168.100.10 8.8.8.8
+
+ipv6 unicast-routing
+
+
+interface g0/0
+ipv6 address fe80::1 link-local
+ipv6 address 2001:DB8:1:1::/64
+ex
+
+
+===========================================================================  ISP3
+
+ena
+clock set 12:00:00 14 Marc 2026
+configure terminal
+
+hostname ISP3
+no ip domain-lookup
+
+banner motd #
+********************************************
+               FIGYELEM!
+       Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+enable secret class123
+service password-encryption
+
+username admin privilege 15 password cisco123
+
+
+line console 0
+password cisco123
+login
+exit
+
+line vty 0 15
+password cisco123
+login local
+transport input ssh
+exit
+
+ip domain-name nagytet.hu
+crypto key generate rsa  
+2048
+
+ip ssh version 2
+
+username Backofficeactive password cisco123
+username Bank password cisco123
+
+int se0/1/1
+ip add 209.165.30.1 255.255.255.252
+no sh
+desc Backoffice_Active fele
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username ISP3 password cisco123
+ex
+
+int se0/1/0
+ip add 209.165.40.1 255.255.255.252
+no sh
+desc Bank fele
+encapsulation ppp
+ppp authentication pap
+ppp pap sent-username ISP3 password cisco123
+ex
+
+int se0/0/1
+ip add 20.20.30.2 255.255.255.252
+no sh
+desc ISP2 fele
+ex
+
+int se0/0/0
+ip add 20.20.10.2 255.255.255.252
+no sh
+desc ISP1 fele
+ex
+
+ip route 172.16.10.0 255.255.255.0 209.165.30.2
+ip route 172.16.11.0 255.255.255.0 209.165.30.2
+ip route 172.16.12.0 255.255.255.0 209.165.30.2
+ip route 172.16.99.0 255.255.255.0 209.165.30.2
+ip route 209.165.30.0 255.255.255.0 209.165.30.2
+
+
+ip route 10.10.24.0 255.255.255.0 209.165.40.2
+ip route 10.10.25.0 255.255.255.0 209.165.40.2
+ip route 10.10.30.0 255.255.255.0 209.165.40.2
+ip route 10.10.21.0 255.255.255.0 209.165.40.2
+ip route 10.10.22.0 255.255.255.0 209.165.40.2
+ip route 10.10.23.0 255.255.255.0 209.165.40.2
+ip route 10.10.29.0 255.255.255.0 209.165.40.2
+
+ip route 10.10.1.0 255.255.255.252 209.165.40.2
+
+ip route 209.165.40.0 255.255.255.0 209.165.40.2
+
+router ospf 10
+netw 20.20.10.0 0.0.0.3 are 0
+netw 20.20.30.0 0.0.0.3 are 0
+no au
+red static sub
+ex
+
