@@ -1,0 +1,74 @@
+conf t
+hostname ISP1
+
+enable secret class123
+
+username Kaszino password cisco123
+username admin privilege 15 password cisco123
+
+ip ssh v 2
+no ip domain-lookup
+ip domain-name nagytet.hu
+
+int s0/0/0
+ desc ISP3 fele
+ ip add 20.20.20.1 255.255.255.252
+ clock rate 2000000
+ no sh
+ ex
+
+int s0/0/1
+ desc ISP2 fele
+ ip add 20.20.10.1 255.255.255.252
+ no sh
+ ex
+
+int s0/1/0
+ desc Kaszino fele
+ ip add 209.165.10.1 255.255.255.252
+ encap ppp
+ ppp auth pap
+ ppp pap sent-username ISP1 password cisco123
+ clock rate 2000000
+ no sh
+ ex
+
+router ospf 10
+ router-id 1.1.1.1
+ redistribute static subnets
+ network 20.20.20.0 0.0.0.3 area 0
+ network 20.20.10.0 0.0.0.3 area 0
+ ex
+
+ip route 192.168.1.0 255.255.255.252 209.165.10.2
+ip route 192.168.10.0 255.255.255.0 209.165.10.2
+ip route 192.168.20.0 255.255.255.0 209.165.10.2
+ip route 192.168.30.0 255.255.255.0 209.165.10.2
+ip route 192.168.40.0 255.255.255.0 209.165.10.2
+ip route 192.168.50.0 255.255.255.0 209.165.10.2
+ip route 192.168.60.0 255.255.255.0 209.165.10.2
+ip route 192.168.99.0 255.255.255.0 209.165.10.2
+ip route 209.165.10.0 255.255.255.0 209.165.10.2
+
+banner motd #
+********************************************
+FIGYELEM!
+Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+line con 0
+ password cisco123
+ login
+ ex
+
+line vty 0 15
+ password cisco123
+ login local
+ transport input none
+ ex
+
+end
+clock set 12:00:00 21 Apr 2026
+wr

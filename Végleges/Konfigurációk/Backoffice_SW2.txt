@@ -1,0 +1,87 @@
+conf t
+hostname Backoffice_SW2
+
+enable secret class123
+
+username admin privilege 15 password cisco123
+
+ip ssh v 2
+no ip domain-lookup
+ip domain-name nagytet.hu
+
+crypto key generate rsa  
+2048
+
+int po1
+ switchport trunk native vlan 199
+ switchport mode trunk
+ switchport nonegotiate
+ ex
+
+int po2
+ switchport trunk native vlan 199
+ switchport mode trunk
+ switchport nonegotiate
+ ex
+
+int range f0/1-2
+ switchport trunk native vlan 199
+ switchport trunk allowed vlan 100,110,120,199
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 2 mode active
+ ex
+
+int range f0/3-4
+ switchport trunk native vlan 199
+ switchport trunk allowed vlan 100,110,120,199
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode passive
+ ex
+
+int range f0/5-7
+ switchport access vlan 199
+ switchport mode access
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ ex
+
+int g0/1
+ switchport trunk native vlan 199
+ switchport trunk allowed vlan 100,110,120,199
+ switchport mode trunk
+ switchport nonegotiate
+ ex
+
+int vlan 199
+ ip add 172.16.99.6 255.255.255.0
+ no sh
+ ex
+
+access-list 14 permit host 172.16.99.100
+access-list 14 deny any
+
+banner motd #
+********************************************
+FIGYELEM!
+Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+line con 0
+ password cisco123
+ login
+ ex
+
+line vty 0 15
+ access-class 14 in
+ password cisco123
+ login local
+ transport input ssh
+ ex
+
+end
+clock set 12:00:00 21 Apr 2026
+wr

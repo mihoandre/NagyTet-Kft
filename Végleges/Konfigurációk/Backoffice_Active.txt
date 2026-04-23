@@ -1,0 +1,106 @@
+conf t
+hostname Backoffice_Active
+
+enable secret class123
+
+username ISP3 password cisco123
+username admin privilege 15 password cisco123
+
+ip ssh v 2
+no ip domain-lookup
+ip domain-name nagytet.hu
+
+crypto key generate rsa  
+2048
+
+int g0/0
+ no sh
+ ex
+
+int g0/0.100
+ desc Vlan 100 active atjaroja
+ encap dot1Q 100
+ ip add 172.16.10.3 255.255.255.0
+ ip helper-address 172.16.99.11
+ ip nat inside
+ standby 10 ip 172.16.10.1
+ standby 10 priority 110
+ standby 10 preempt
+ ex
+
+int g0/0.110
+ desc Vlan 110 active atjaroja
+ encap dot1Q 110
+ ip add 172.16.11.3 255.255.255.0
+ ip helper-address 172.16.99.11
+ ip nat inside
+ standby 11 ip 172.16.11.1
+ standby 11 priority 110
+ standby 11 preempt
+ ex
+
+int g0/0.120
+ desc Vlan 120 active atjaroja
+ encap dot1Q 120
+ ip add 172.16.12.3 255.255.255.0
+ ip helper-address 172.16.99.11
+ ip nat inside
+ standby 12 ip 172.16.12.1
+ standby 12 priority 110
+ standby 12 preempt
+ ex
+
+int g0/0.199
+ desc Vlan 199 native active atjaroja
+ encap dot1Q 199 native
+ ip add 172.16.99.3 255.255.255.0
+ ip nat inside
+ standby 99 ip 172.16.99.1
+ standby 99 priority 110
+ standby 99 preempt
+ ex
+
+int s0/0/0
+ desc ISP3 fele
+ ip add 209.165.30.2 255.255.255.252
+ encap ppp
+ ppp auth pap
+ ppp pap sent-username Backofficeactive password cisco123
+ ip nat outside
+ no sh
+ ex
+
+ip nat pool Backoffice_Active_Pool 209.165.30.10 209.165.30.30 netmask 255.255.255.0
+ip nat inside source list 1 pool Backoffice_Active_Pool
+ip nat inside source static 172.16.99.10 209.165.30.5
+ip nat inside source static 172.16.99.11 209.165.30.6
+
+access-list 14 permit host 172.16.99.100
+access-list 14 deny any
+access-list 1 permit host 172.16.99.100
+
+ip route 0.0.0.0 0.0.0.0 209.165.30.1
+
+banner motd #
+********************************************
+FIGYELEM!
+Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+line con 0
+ password cisco123
+ login
+ ex
+
+line vty 0 15
+ access-class 14 in
+ password cisco123
+ login local
+ transport input ssh
+ ex
+
+end
+clock set 12:00:00 21 Apr 2026
+wr

@@ -1,0 +1,77 @@
+conf t
+hostname ISP2
+
+enable secret class123
+
+username Backofficestandby password cisco123
+username admin privilege 15 password cisco123
+
+ip ssh v 2
+no ip domain-lookup
+ip domain-name nagytet.hu
+
+int g0/0
+ desc ISP-Firewall fele
+ ip add 20.20.40.2 255.255.255.252
+ no sh
+ ex
+
+int s0/0/0
+ desc ISP3 fele
+ ip add 20.20.30.1 255.255.255.252
+ clock rate 2000000
+ no sh
+ ex
+
+int s0/0/1
+ desc ISP1 fele
+ ip add 20.20.20.2 255.255.255.252
+ no sh
+ ex
+
+int s0/1/0
+ desc Backoffice_Standby fele
+ ip add 209.165.20.1 255.255.255.252
+ encap ppp
+ ppp auth pap
+ ppp pap sent-username ISP2 password cisco123
+ clock rate 2000000
+ no sh
+ ex
+
+router ospf 10
+ router-id 2.2.2.2
+ redistribute static subnets
+ network 20.20.20.0 0.0.0.3 area 0
+ network 20.20.30.0 0.0.0.3 area 0
+ ex
+
+ip route 172.16.10.0 255.255.255.0 209.165.20.2
+ip route 172.16.11.0 255.255.255.0 209.165.20.2
+ip route 172.16.12.0 255.255.255.0 209.165.20.2
+ip route 172.16.99.0 255.255.255.0 209.165.20.2
+ip route 209.165.20.0 255.255.255.0 209.165.20.2
+ip route 8.8.8.8 255.255.255.255 20.20.40.1
+
+banner motd #
+********************************************
+FIGYELEM!
+Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+line con 0
+ password cisco123
+ login
+ ex
+
+line vty 0 15
+ password cisco123
+ login local
+ transport input none
+ ex
+
+end
+clock set 12:00:00 21 Apr 2026
+wr

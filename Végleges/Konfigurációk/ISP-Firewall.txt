@@ -1,0 +1,39 @@
+conf t
+hostname ISP-Firewall
+domain-name nagytet.hu
+
+enable password class123
+
+int g1/1
+ desc ISP2 fele
+ nameif outside
+ security-level 0
+ ip add 20.20.40.1 255.255.255.252
+ no sh
+ ex
+
+int g1/2
+ desc DNS fele
+ nameif inside
+ security-level 100
+ ip add 192.168.100.1 255.255.255.0
+ ipv6 address 2001:DB8:100::1/64
+ no sh
+ ex
+
+object network DNS-SERVER
+ host 192.168.100.10
+ nat (inside,outside) static 8.8.8.8
+ ex
+
+route outside 0.0.0.0 0.0.0.0 20.20.40.2 1
+
+access-list OUTSIDE-IN extended permit udp any host 8.8.8.8 eq domain
+access-list OUTSIDE-IN extended permit tcp any host 8.8.8.8 eq domain
+access-list OUTSIDE-IN extended permit icmp any host 8.8.8.8 echo
+
+access-group OUTSIDE-IN in interface outside
+
+end
+clock set 12:00:00 21 Apr 2026
+wr

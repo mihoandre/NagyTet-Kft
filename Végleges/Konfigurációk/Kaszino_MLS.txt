@@ -1,0 +1,138 @@
+conf t
+hostname Kaszino_MLS
+
+login block-for 120 attempts 3 within 60
+
+enable secret class123
+
+username admin privilege 15 password class123
+
+ip routing
+
+ip ssh v 2
+no ip domain-lookup
+ip domain-name nagytet.hu
+
+crypto key generate rsa  
+2048
+
+int g1/0/1
+ no switchport
+ ip add 192.168.1.2 255.255.255.252
+ no sh
+ ex
+
+int range g1/0/2-4
+ switchport access vlan 10
+ switchport mode access
+ ex
+
+int range g1/0/5-7
+ switchport access vlan 20
+ switchport mode access
+ ex
+
+int range g1/0/8-9
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50,60,99
+ switchport mode trunk
+ ex
+
+int range g1/0/10-12
+ switchport access vlan 40
+ switchport mode access
+ ex
+
+int g1/0/13
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50,60,99
+ switchport mode trunk
+ ex
+
+int range g1/0/14-15
+ switchport access vlan 99
+ switchport mode access
+ ex
+
+int range g1/0/16-17
+ switchport access vlan 30
+ switchport mode access
+ ex
+
+int vlan 10
+ desc vlan 10 atjaroja
+ ip add 192.168.10.1 255.255.255.0
+ ip helper-address 192.168.99.10
+ no sh
+ ex
+
+int vlan 20
+ desc vlan 20 atjaroja
+ ip add 192.168.20.1 255.255.255.0
+ ip helper-address 192.168.99.10
+ no sh
+ ex
+
+int vlan 30
+ desc vlan 30 atjaroja
+ ip add 192.168.30.1 255.255.255.0
+ ip helper-address 192.168.99.10
+ no sh
+ ex
+
+int vlan 40
+ desc vlan 40 atjaroja
+ ip add 192.168.40.1 255.255.255.0
+ ip helper-address 192.168.99.10
+ no sh
+ ex
+
+int vlan 50
+ desc vlan 50 atjaroja
+ ip add 192.168.50.1 255.255.255.0
+ ip helper-address 192.168.99.10
+ no sh
+ ex
+
+int vlan 60
+ desc vlan 60 atjaroja
+ ip add 192.168.60.1 255.255.255.0
+ ip helper-address 192.168.99.10
+ no sh
+ ex
+
+int vlan 99
+ desc vlan 99 native atjaroja
+ ip add 192.168.99.1 255.255.255.0
+ ip helper-address 192.168.99.20
+ no sh
+ ex
+
+ip route 0.0.0.0 0.0.0.0 192.168.1.1
+
+access-list 14 permit host 192.168.99.100
+access-list 14 deny any
+
+banner motd #
+********************************************
+FIGYELEM!
+Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+line con 0
+ password cisco123
+ login
+ ex
+
+line vty 0 15
+ access-class 14 in
+ password cisco123
+ login local
+ transport input ssh
+ ex
+
+end
+clock set 12:00:00 21 Apr 2026
+wr

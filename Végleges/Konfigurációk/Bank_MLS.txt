@@ -1,0 +1,110 @@
+conf t
+hostname Bank_MLS
+
+login block-for 120 attempts 3 within 60
+
+enable secret class123
+
+username admin privilege 15 password cisco123
+
+ip routing
+
+ip ssh v 2
+no ip domain-lookup
+ip domain-name nagytet.hu
+
+crypto key generate rsa  
+2048
+
+int g1/0/1
+ no switchport
+ ip add 10.10.1.2 255.255.255.252
+ no sh
+ ex
+
+int range g1/0/2-3
+ switchport access vlan 299
+ switchport mode access
+ ex
+
+int range g1/0/4-8
+ switchport access vlan 230
+ switchport mode access
+ ex
+
+int range g1/0/9-14
+ switchport access vlan 210
+ switchport mode access
+ ex
+
+int range g1/0/15-19
+ switchport access vlan 220
+ switchport mode access
+ ex
+
+int g1/0/20
+ switchport access vlan 260
+ switchport mode access
+ ex
+
+int vlan 210
+ desc Bank penztar atjaroja
+ ip add 10.10.21.1 255.255.255.0
+ ip helper-address 10.10.29.10
+ no sh
+ ex
+
+int vlan 220
+ desc Bank konyveles atjaroja
+ ip add 10.10.22.1 255.255.255.0
+ ip helper-address 10.10.29.10
+ no sh
+ ex
+
+int vlan 230
+ desc Bank hitelezes atjaroja
+ ip add 10.10.23.1 255.255.255.0
+ ip helper-address 10.10.29.10
+ no sh
+ ex
+
+int vlan 260
+ desc Bank ugyfelszolgalat atjaroja
+ ip add 10.10.26.1 255.255.255.0
+ no sh
+ ex
+
+int vlan 299
+ desc Bank_MLS native atjaroja
+ ip add 10.10.29.1 255.255.255.0
+ no sh
+ ex
+
+ip route 0.0.0.0 0.0.0.0 10.10.1.1
+
+access-list 14 permit host 10.10.29.100
+access-list 14 deny any
+
+banner motd #
+********************************************
+FIGYELEM!
+Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+line con 0
+ password cisco123
+ login
+ ex
+
+line vty 0 15
+ access-class 14 in
+ password cisco123
+ login local
+ transport input ssh
+ ex
+
+end
+clock set 12:00:00 21 Apr 2026
+wr

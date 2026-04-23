@@ -1,0 +1,94 @@
+conf t
+hostname ISP3
+
+login block-for 120 attempts 3 within 60
+
+enable secret class123
+
+username Backofficeactive password cisco123
+username Bank password cisco123
+username admin privilege 15 password cisco123
+
+ip ssh v 2
+no ip domain-lookup
+ip domain-name nagytet.hu
+
+int s0/0/0
+ desc ISP1 fele
+ ip add 20.20.10.2 255.255.255.252
+ clock rate 2000000
+ no sh
+ ex
+
+int s0/0/1
+ desc ISP2 fele
+ ip add 20.20.30.2 255.255.255.252
+ no sh
+ ex
+
+int s0/1/0
+ desc Bank fele
+ ip add 209.165.40.1 255.255.255.252
+ encap ppp
+ ppp auth pap
+ ppp pap sent-username ISP3 password cisco123
+ clock rate 2000000
+ no sh
+ ex
+
+int s0/1/1
+ desc Backoffice_Active fele
+ ip add 209.165.30.1 255.255.255.252
+ encap ppp
+ ppp auth pap
+ ppp pap sent-username ISP3 password cisco123
+ clock rate 2000000
+ no sh
+ ex
+
+router ospf 10
+ router-id 3.3.3.3
+ redistribute static subnets
+ network 20.20.10.0 0.0.0.3 area 0
+ network 20.20.30.0 0.0.0.3 area 0
+ ex
+
+ip route 172.16.10.0 255.255.255.0 209.165.30.2
+ip route 172.16.11.0 255.255.255.0 209.165.30.2
+ip route 172.16.12.0 255.255.255.0 209.165.30.2
+ip route 172.16.99.0 255.255.255.0 209.165.30.2
+ip route 209.165.30.0 255.255.255.0 209.165.30.2
+
+ip route 10.10.1.0 255.255.255.252 209.165.40.2
+ip route 10.10.21.0 255.255.255.0 209.165.40.2
+ip route 10.10.22.0 255.255.255.0 209.165.40.2
+ip route 10.10.23.0 255.255.255.0 209.165.40.2
+ip route 10.10.24.0 255.255.255.0 209.165.40.2
+ip route 10.10.25.0 255.255.255.0 209.165.40.2
+ip route 10.10.26.0 255.255.255.0 209.165.40.2
+ip route 10.10.29.0 255.255.255.0 209.165.40.2
+ip route 10.10.30.0 255.255.255.0 209.165.40.2
+ip route 209.165.40.0 255.255.255.0 209.165.40.2
+
+banner motd #
+********************************************
+FIGYELEM!
+Zart informatikai halozat.
+Jogosulatlan hozzaferes tilos es naplozasra kerul.
+********************************************
+#
+
+line con 0
+ password cisco123
+ login
+ ex
+
+line vty 0 15
+ password cisco123
+ login local
+ transport input none
+ ex
+
+end
+clock set 12:00:00 21 Apr 2026
+wr
