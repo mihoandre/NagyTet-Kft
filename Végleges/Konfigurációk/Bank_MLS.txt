@@ -1,110 +1,249 @@
-conf t
+!
+version 16.3.2
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
 hostname Bank_MLS
-
+!
 login block-for 120 attempts 3 within 60
-
-enable secret class123
-
-username admin privilege 15 password cisco123
-
+!
+enable secret 5 $1$mERr$/VT.EosIwbboaDHzZXq7r1
+!
+!
+!
+!
+!
+!
+no ip cef
 ip routing
-
-ip ssh v 2
+!
+no ipv6 cef
+!
+!
+!
+username admin privilege 15 password 7 0822455D0A16544541
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
 no ip domain-lookup
 ip domain-name nagytet.hu
-
-crypto key generate rsa  
-2048
-
-int g1/0/1
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet1/0/1
+ description Bank fele
  no switchport
- ip add 10.10.1.2 255.255.255.252
- no sh
- ex
-
-int range g1/0/2-3
+ ip address 10.10.1.2 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet1/0/2
  switchport access vlan 299
  switchport mode access
- ex
-
-int range g1/0/4-8
+!
+interface GigabitEthernet1/0/3
+ switchport access vlan 299
+ switchport mode access
+!
+interface GigabitEthernet1/0/4
  switchport access vlan 230
  switchport mode access
- ex
-
-int range g1/0/9-14
+!
+interface GigabitEthernet1/0/5
+ switchport access vlan 230
+ switchport mode access
+!
+interface GigabitEthernet1/0/6
+ switchport access vlan 230
+ switchport mode access
+!
+interface GigabitEthernet1/0/7
+ switchport access vlan 230
+ switchport mode access
+!
+interface GigabitEthernet1/0/8
+ switchport access vlan 230
+ switchport mode access
+!
+interface GigabitEthernet1/0/9
  switchport access vlan 210
  switchport mode access
- ex
-
-int range g1/0/15-19
+!
+interface GigabitEthernet1/0/10
+ switchport access vlan 210
+ switchport mode access
+!
+interface GigabitEthernet1/0/11
+ switchport access vlan 210
+ switchport mode access
+!
+interface GigabitEthernet1/0/12
+ switchport access vlan 210
+ switchport mode access
+!
+interface GigabitEthernet1/0/13
+ switchport access vlan 210
+ switchport mode access
+!
+interface GigabitEthernet1/0/14
+ switchport access vlan 210
+ switchport mode access
+!
+interface GigabitEthernet1/0/15
  switchport access vlan 220
  switchport mode access
- ex
-
-int g1/0/20
+!
+interface GigabitEthernet1/0/16
+ switchport access vlan 220
+ switchport mode access
+!
+interface GigabitEthernet1/0/17
+ switchport access vlan 220
+ switchport mode access
+!
+interface GigabitEthernet1/0/18
+ switchport access vlan 220
+ switchport mode access
+!
+interface GigabitEthernet1/0/19
+ switchport access vlan 220
+ switchport mode access
+!
+interface GigabitEthernet1/0/20
  switchport access vlan 260
  switchport mode access
- ex
-
-int vlan 210
- desc Bank penztar atjaroja
- ip add 10.10.21.1 255.255.255.0
+!
+interface GigabitEthernet1/0/21
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/0/22
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/0/23
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/0/24
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/1/1
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/1/2
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/1/3
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/1/4
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan210
+ description Bank penztar atjaroja
+ mac-address 0060.3e66.5601
+ ip address 10.10.21.1 255.255.255.0
  ip helper-address 10.10.29.10
- no sh
- ex
-
-int vlan 220
- desc Bank konyveles atjaroja
- ip add 10.10.22.1 255.255.255.0
+!
+interface Vlan220
+ description Bank konyveles atjaroja
+ mac-address 0060.3e66.5602
+ ip address 10.10.22.1 255.255.255.0
  ip helper-address 10.10.29.10
- no sh
- ex
-
-int vlan 230
- desc Bank hitelezes atjaroja
- ip add 10.10.23.1 255.255.255.0
+!
+interface Vlan230
+ description Bank hitelezes atjaroja
+ mac-address 0060.3e66.5603
+ ip address 10.10.23.1 255.255.255.0
  ip helper-address 10.10.29.10
- no sh
- ex
-
-int vlan 260
- desc Bank ugyfelszolgalat atjaroja
- ip add 10.10.26.1 255.255.255.0
- no sh
- ex
-
-int vlan 299
- desc Bank_MLS native atjaroja
- ip add 10.10.29.1 255.255.255.0
- no sh
- ex
-
-ip route 0.0.0.0 0.0.0.0 10.10.1.1
-
+!
+interface Vlan260
+ description Bank ugyfelszolgalat atjaroja
+ mac-address 0060.3e66.5604
+ ip address 10.10.26.1 255.255.255.0
+!
+interface Vlan299
+ description Bank_MLS native atjaroja
+ mac-address 0060.3e66.5605
+ ip address 10.10.29.1 255.255.255.0
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 10.10.1.1 
+!
+ip flow-export version 9
+!
+!
+ip access-list extended sl_def_acl
+ deny tcp any any eq telnet
+ deny tcp any any eq www
+ deny tcp any any eq 22
+ permit tcp any any eq 22
 access-list 14 permit host 10.10.29.100
 access-list 14 deny any
-
+!
 banner motd #
 ********************************************
-FIGYELEM!
-Zart informatikai halozat.
+               FIGYELEM!
+       Zart informatikai halozat.
 Jogosulatlan hozzaferes tilos es naplozasra kerul.
 ********************************************
 #
-
+!
+!
+!
+!
 line con 0
- password cisco123
+ password 7 0822455D0A16544541
  login
- ex
-
-line vty 0 15
+!
+line aux 0
+!
+line vty 0 4
  access-class 14 in
- password cisco123
+ password 7 0822455D0A16544541
  login local
  transport input ssh
- ex
-
+line vty 5 15
+ access-class 14 in
+ password 7 0822455D0A16544541
+ login local
+ transport input ssh
+!
+!
+!
+!
 end
-clock set 12:00:00 21 Apr 2026
-wr
+
